@@ -40,8 +40,8 @@ export default function ScoreboardPage() {
   // Hidden State (Admin Controlled)
   if (!data?.visible) {
     return (
-      <div className="max-w-xl mx-auto py-16 text-center space-y-6">
-        <div className="w-20 h-20 rounded-full mx-auto bg-black/60 border border-nevermore-border flex items-center justify-center text-nevermore-muted shadow-parchment">
+      <div className="max-w-xl mx-auto py-16 text-center space-y-6 animate-fadeInUp">
+        <div className="w-20 h-20 rounded-full mx-auto bg-black/60 border border-nevermore-border flex items-center justify-center text-nevermore-muted shadow-parchment animate-float">
           <EyeOff className="w-10 h-10 text-nevermore-candle animate-pulse" />
         </div>
 
@@ -57,7 +57,7 @@ export default function ScoreboardPage() {
         <div className="pt-2">
           <button
             onClick={fetchScoreboard}
-            className="py-2 px-4 rounded-xl bg-nevermore-surface hover:bg-nevermore-card border border-nevermore-border text-nevermore-candle text-xs font-semibold inline-flex items-center gap-2"
+            className="py-2.5 px-5 rounded-xl bg-nevermore-surface hover:bg-nevermore-card border border-nevermore-border text-nevermore-candle text-xs font-semibold inline-flex items-center gap-2 transition hover:scale-105 active:scale-95 shadow-candle"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Check Visibility</span>
@@ -70,7 +70,7 @@ export default function ScoreboardPage() {
   const leaderboard = data.leaderboard || [];
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+    <div className="space-y-6 max-w-4xl mx-auto pb-12 animate-fadeIn">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-nevermore-border/60">
         <div>
@@ -85,7 +85,7 @@ export default function ScoreboardPage() {
 
         <button
           onClick={fetchScoreboard}
-          className="text-xs px-3 py-1.5 rounded-lg bg-nevermore-surface hover:bg-nevermore-card border border-nevermore-border text-nevermore-candle flex items-center gap-1.5 transition"
+          className="text-xs px-3.5 py-2 rounded-xl bg-nevermore-surface hover:bg-nevermore-card border border-nevermore-border text-nevermore-candle flex items-center gap-1.5 transition active:scale-95 shadow-candle"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Refresh</span>
@@ -96,7 +96,7 @@ export default function ScoreboardPage() {
       {leaderboard.length >= 3 && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
           {/* Rank 2 */}
-          <div className="order-2 sm:order-1 parchment-card p-5 rounded-2xl border border-stone-600/40 text-center space-y-2">
+          <div className="order-2 sm:order-1 parchment-card p-5 rounded-2xl border border-stone-600/40 text-center space-y-2 animate-fadeInUp" style={{ animationDelay: '100ms', animationFillMode: 'both' }}>
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-stone-400">
               Rank II · Silver
             </span>
@@ -112,8 +112,8 @@ export default function ScoreboardPage() {
           </div>
 
           {/* Rank 1 (Crown) */}
-          <div className="order-1 sm:order-2 parchment-card p-6 rounded-2xl border-2 border-nevermore-candle shadow-candle text-center space-y-2 relative -translate-y-2">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-nevermore-candle text-black text-[10px] font-bold uppercase tracking-wider font-mono">
+          <div className="order-1 sm:order-2 parchment-card p-6 rounded-2xl border-2 border-nevermore-candle shadow-candle text-center space-y-2 relative sm:-translate-y-3 animate-fadeInScale animate-shimmer">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-nevermore-candle text-black text-[10px] font-bold uppercase tracking-wider font-mono shadow-candle">
               ★ Leading The Investigation ★
             </div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-300">
@@ -131,7 +131,7 @@ export default function ScoreboardPage() {
           </div>
 
           {/* Rank 3 */}
-          <div className="order-3 parchment-card p-5 rounded-2xl border border-amber-900/40 text-center space-y-2">
+          <div className="order-3 parchment-card p-5 rounded-2xl border border-amber-900/40 text-center space-y-2 animate-fadeInUp" style={{ animationDelay: '200ms', animationFillMode: 'both' }}>
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-700">
               Rank III · Bronze
             </span>
@@ -149,7 +149,7 @@ export default function ScoreboardPage() {
       )}
 
       {/* Full Leaderboard Table */}
-      <div className="parchment-card rounded-2xl border border-nevermore-border overflow-hidden">
+      <div className="parchment-card rounded-2xl border border-nevermore-border overflow-hidden animate-fadeInUp" style={{ animationDelay: '250ms', animationFillMode: 'both' }}>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
@@ -171,8 +171,15 @@ export default function ScoreboardPage() {
 
                 return (
                   <tr key={item.teamId} className="hover:bg-nevermore-surface/50 transition">
-                    <td className="p-3 text-center font-mono font-bold text-nevermore-candle text-sm">
-                      #{item.rank}
+                    <td className="p-3 text-center">
+                      <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full font-mono font-bold text-xs ${
+                        item.rank === 1 ? 'bg-amber-500/20 text-amber-300 ring-1 ring-amber-500/40 shadow-candle' :
+                        item.rank === 2 ? 'bg-stone-500/20 text-stone-300 ring-1 ring-stone-400/40' :
+                        item.rank === 3 ? 'bg-amber-900/30 text-amber-500 ring-1 ring-amber-700/40' :
+                        'text-nevermore-muted bg-black/40'
+                      }`}>
+                        {item.rank}
+                      </span>
                     </td>
                     <td className="p-3">
                       <div className="flex items-center gap-2.5">

@@ -21,9 +21,13 @@ export default function SoundToggle() {
       type="button"
       onClick={handleToggle}
       title={muted ? 'Unmute Gothic Atmosphere Sound' : 'Mute Sound'}
-      className="p-1.5 rounded-lg bg-black/40 hover:bg-nevermore-surface border border-nevermore-border/60 text-nevermore-candle transition"
+      className={`p-2 rounded-xl border transition-all duration-200 active:scale-95 ${
+        muted
+          ? 'bg-black/40 hover:bg-nevermore-surface border-nevermore-border/60 text-nevermore-muted hover:text-nevermore-parchment'
+          : 'bg-amber-500/10 border-amber-500/40 text-amber-300 shadow-candle'
+      }`}
     >
-      {muted ? <VolumeX className="w-4 h-4 text-nevermore-muted" /> : <Volume2 className="w-4 h-4 text-nevermore-candle" />}
+      {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 animate-pulse" />}
     </button>
   );
 }

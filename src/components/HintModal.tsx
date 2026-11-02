@@ -36,7 +36,7 @@ export default function HintModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-md parchment-card p-6 rounded-2xl border border-nevermore-border shadow-candle">
+      <div className="relative w-full max-w-md parchment-card p-6 rounded-2xl border border-nevermore-border shadow-candle animate-fadeInScale">
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-nevermore-border/60 mb-4">
           <div className="flex items-center gap-2 text-nevermore-candle">

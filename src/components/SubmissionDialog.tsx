@@ -24,7 +24,7 @@ export default function SubmissionDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-      <div className="w-full max-w-md parchment-card p-6 rounded-2xl border border-rose-900/60 shadow-crimson space-y-5">
+      <div className="w-full max-w-md parchment-card p-6 rounded-2xl border border-rose-900/60 shadow-crimson space-y-5 animate-fadeInScale">
         {/* Seal Icon Header */}
         <div className="flex flex-col items-center text-center">
           <div className="w-12 h-12 rounded-full wax-seal flex items-center justify-center text-white mb-2 shadow-crimson">

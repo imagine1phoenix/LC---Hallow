@@ -70,7 +70,7 @@ export default function DeductionGridGame({
   return (
     <div className="space-y-6">
       {/* Alibi & Evidence Dossier */}
-      <div className="p-5 rounded-2xl parchment-card border border-nevermore-border space-y-3">
+      <div className="p-5 rounded-2xl parchment-card border border-nevermore-border space-y-3 animate-fadeInUp">
         <h4 className="font-gothic text-xs font-bold uppercase tracking-wider text-nevermore-candle flex items-center gap-2">
           <BookOpen className="w-4 h-4" />
           <span>Nevermore Forensic Dossier</span>
@@ -143,7 +143,7 @@ export default function DeductionGridGame({
       </div>
 
       {/* Suspect Quick Selection Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 stagger-children">
         {suspects.map((s) => {
           const isSelected = currentAnswer.toUpperCase().includes(s.name.toUpperCase().split(' ')[1] || s.name);
           return (

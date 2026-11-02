@@ -70,7 +70,7 @@ export default function CipherGame({
   return (
     <div className="space-y-6">
       {/* Ancient Parchment Cipher Box */}
-      <div className="p-6 rounded-2xl parchment-card border border-nevermore-border shadow-candle relative overflow-hidden">
+      <div className="p-6 rounded-2xl parchment-card border border-nevermore-border shadow-candle relative overflow-hidden animate-fadeInUp">
         <div className="absolute top-0 right-0 p-4 opacity-10">
           <Scroll className="w-24 h-24 text-nevermore-candle" />
         </div>

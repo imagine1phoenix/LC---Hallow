@@ -96,12 +96,14 @@ export default function AdminAuthGate({ children }: AdminAuthGateProps) {
   // Unauthenticated: Show Vault Door Gate
   if (!authenticated) {
     return (
-      <div className="max-w-md mx-auto py-12 px-4 space-y-8 animate-fadeIn">
+      <div className="max-w-md mx-auto py-12 px-4 space-y-8 animate-fadeInUp">
         <div className="text-center space-y-3">
           <div className="flex justify-center mb-2">
-            <Crest size="lg" showSubtitle={false} />
+            <div className="animate-float">
+              <Crest size="lg" showSubtitle={false} />
+            </div>
           </div>
-          <h1 className="font-gothic text-2xl sm:text-3xl font-extrabold text-nevermore-parchment">
+          <h1 className="font-gothic text-2xl sm:text-3xl font-extrabold text-nevermore-parchment tracking-wide">
             Headmaster Vault
           </h1>
           <p className="text-xs text-nevermore-muted font-mono uppercase tracking-widest text-rose-400">
@@ -111,7 +113,7 @@ export default function AdminAuthGate({ children }: AdminAuthGateProps) {
 
         <form
           onSubmit={handleLogin}
-          className="parchment-card p-6 sm:p-8 rounded-3xl border-2 border-rose-900/60 shadow-crimson space-y-5"
+          className="parchment-card-elevated p-6 sm:p-8 rounded-3xl border-2 border-rose-900/60 shadow-crimson space-y-5"
         >
           <div className="flex items-center gap-3 p-3.5 rounded-xl bg-black/60 border border-nevermore-border/70 text-xs text-nevermore-bone leading-relaxed">
             <Lock className="w-5 h-5 text-nevermore-candle shrink-0" />

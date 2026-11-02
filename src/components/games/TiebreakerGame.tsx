@@ -42,7 +42,7 @@ export default function TiebreakerGame({
   return (
     <div className="space-y-6">
       {/* Ancient Stanza Tablet */}
-      <div className="p-6 sm:p-8 rounded-2xl parchment-card border-2 border-amber-500/40 shadow-candle text-center space-y-4">
+      <div className="p-6 sm:p-8 rounded-2xl parchment-card border-2 border-amber-500/40 shadow-candle text-center space-y-4 animate-fadeInScale">
         <div className="w-12 h-12 rounded-full mx-auto bg-black/60 border border-amber-500/60 flex items-center justify-center text-amber-300 shadow-candle">
           <Feather className="w-6 h-6" />
         </div>
@@ -68,7 +68,7 @@ export default function TiebreakerGame({
       </div>
 
       {/* Candidate Clues / Choices */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 stagger-children">
         {candidateAnswers.map((opt) => {
           const isSelected = currentAnswer.toUpperCase().includes(opt.value);
           return (

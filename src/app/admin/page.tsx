@@ -193,7 +193,7 @@ export default function AdminPage() {
       )}
 
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-nevermore-border/40 text-xs font-semibold">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2.5 border-b border-nevermore-border/40 text-xs font-semibold -mx-1 px-1">
         {[
           { id: 'rounds', label: 'Round Control' },
           { id: 'teams', label: 'Teams & Devices' },
@@ -207,10 +207,10 @@ export default function AdminPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`px-3.5 py-2 rounded-lg whitespace-nowrap transition ${
+            className={`px-3.5 py-2 rounded-xl whitespace-nowrap transition-all duration-200 ${
               activeTab === tab.id
-                ? 'bg-nevermore-surface text-nevermore-candle border border-nevermore-candle/40'
-                : 'text-nevermore-muted hover:text-nevermore-parchment'
+                ? 'bg-nevermore-surface text-nevermore-candle border border-nevermore-candle/40 shadow-candle'
+                : 'text-nevermore-muted hover:text-nevermore-parchment hover:bg-nevermore-surface/50 border border-transparent'
             }`}
           >
             {tab.label}

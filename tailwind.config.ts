@@ -41,6 +41,13 @@ const config: Config = {
       animation: {
         flicker: "flicker 4s infinite alternate",
         pulseGlow: "pulseGlow 2.5s ease-in-out infinite",
+        fadeIn: "fadeIn 0.4s ease-out",
+        fadeInUp: "fadeInUp 0.5s ease-out",
+        fadeInScale: "fadeInScale 0.35s ease-out",
+        slideInRight: "slideInRight 0.4s ease-out",
+        float: "floatSlow 4s ease-in-out infinite",
+        borderPulse: "borderPulse 2s ease-in-out infinite",
+        shimmer: "shimmer 3s infinite",
       },
       keyframes: {
         flicker: {
@@ -53,10 +60,37 @@ const config: Config = {
           "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
           "50%": { opacity: "1", transform: "scale(1.03)" },
         },
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        fadeInUp: {
+          from: { opacity: "0", transform: "translateY(16px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeInScale: {
+          from: { opacity: "0", transform: "scale(0.92)" },
+          to: { opacity: "1", transform: "scale(1)" },
+        },
+        slideInRight: {
+          from: { opacity: "0", transform: "translateX(24px)" },
+          to: { opacity: "1", transform: "translateX(0)" },
+        },
+        floatSlow: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-6px)" },
+        },
+        borderPulse: {
+          "0%, 100%": { borderColor: "rgba(245, 158, 11, 0.3)" },
+          "50%": { borderColor: "rgba(245, 158, 11, 0.7)" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% center" },
+          "100%": { backgroundPosition: "200% center" },
+        },
       },
     },
   },
   plugins: [],
 };
 export default config;
-

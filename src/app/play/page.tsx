@@ -189,7 +189,7 @@ export default function PlayPage() {
       <AntiCheatGuard teamId={team.id} active={true} />
 
       {/* Top Game Bar */}
-      <div className="p-4 sm:p-5 rounded-2xl parchment-card border border-nevermore-border shadow-candle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-2xl parchment-card border border-nevermore-border shadow-candle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fadeInUp">
         {/* Team Identification */}
         <div className="flex items-center gap-3">
           <WaxSeal sigilId={team.sigil} size="md" />
@@ -220,7 +220,7 @@ export default function PlayPage() {
           <button
             type="button"
             onClick={() => setHintModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-nevermore-surface hover:bg-nevermore-card border border-amber-500/30 text-nevermore-candle hover:text-amber-300 text-xs font-semibold shadow-candle transition"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-nevermore-surface hover:bg-nevermore-card border border-amber-500/30 text-nevermore-candle hover:text-amber-300 text-xs font-semibold shadow-candle transition active:scale-95"
           >
             <HelpCircle className="w-3.5 h-3.5" />
             <span>Whispers ({hintsUsed})</span>
@@ -230,7 +230,7 @@ export default function PlayPage() {
 
       {/* Round Released Check */}
       {!activeRound.released_at ? (
-        <div className="parchment-card p-12 rounded-3xl border border-nevermore-border text-center space-y-4">
+        <div className="parchment-card p-12 rounded-3xl border border-nevermore-border text-center space-y-4 animate-fadeInScale">
           <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center bg-black/60 border border-nevermore-candle text-nevermore-candle shadow-candle">
             <Lock className="w-8 h-8 animate-pulse" />
           </div>
@@ -243,8 +243,8 @@ export default function PlayPage() {
         </div>
       ) : submittedResult ? (
         /* Submission Already Sealed View */
-        <div className="parchment-card p-8 rounded-3xl border border-nevermore-border text-center space-y-6">
-          <div className="w-16 h-16 rounded-full mx-auto wax-seal flex items-center justify-center text-white shadow-crimson">
+        <div className="parchment-card-elevated p-8 rounded-3xl border border-nevermore-border text-center space-y-6 animate-fadeInUp">
+          <div className="w-16 h-16 rounded-full mx-auto wax-seal flex items-center justify-center text-white shadow-crimson animate-float">
             <ShieldCheck className="w-8 h-8" />
           </div>
 
@@ -258,7 +258,7 @@ export default function PlayPage() {
           </div>
 
           {/* Points Breakdown Pill */}
-          <div className="inline-flex flex-wrap items-center justify-center gap-4 p-4 rounded-2xl bg-nevermore-surface border border-nevermore-border">
+          <div className="inline-flex flex-wrap items-center justify-center gap-4 p-4 rounded-2xl bg-nevermore-surface border border-nevermore-border shadow-candle">
             <div className="text-left">
               <span className="text-[10px] text-nevermore-muted uppercase tracking-wider block">Round Points</span>
               <span className="font-mono text-xl font-bold text-nevermore-candle">
@@ -281,7 +281,7 @@ export default function PlayPage() {
           <div className="pt-2">
             <button
               onClick={() => router.push('/scoreboard')}
-              className="py-2.5 px-6 rounded-xl bg-nevermore-surface hover:bg-nevermore-card border border-nevermore-border text-nevermore-candle text-xs font-bold inline-flex items-center gap-2 transition"
+              className="py-2.5 px-6 rounded-xl bg-nevermore-surface hover:bg-nevermore-card border border-nevermore-border text-nevermore-candle text-xs font-bold inline-flex items-center gap-2 transition hover:scale-105 active:scale-95"
             >
               <span>View Scoreboard Standings</span>
               <ArrowRight className="w-4 h-4" />
@@ -331,8 +331,9 @@ export default function PlayPage() {
           )}
 
           {/* Submission Bar */}
-          <div className="sticky bottom-4 z-30 p-4 rounded-2xl bg-nevermore-darkest/95 border border-nevermore-border shadow-crimson backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="sticky bottom-4 z-30 p-4 rounded-2xl glass-card shadow-crimson flex flex-col sm:flex-row items-center justify-between gap-3 animate-fadeInUp">
             <div className="flex items-center gap-2 text-xs text-nevermore-muted">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <Save className="w-3.5 h-3.5 text-nevermore-candle" />
               <span>Autosave: {autosaveStatus}</span>
             </div>

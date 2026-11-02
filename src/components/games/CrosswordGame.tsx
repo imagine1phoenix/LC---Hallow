@@ -169,7 +169,7 @@ export default function CrosswordGame({
   return (
     <div className="space-y-6">
       {/* Lore Banner */}
-      <div className="p-4 rounded-xl bg-nevermore-surface border border-nevermore-border/70 text-xs text-nevermore-bone leading-relaxed">
+      <div className="p-4 rounded-xl bg-nevermore-surface border border-nevermore-border/70 text-xs text-nevermore-bone leading-relaxed animate-fadeIn">
         <div className="flex items-center gap-2 text-nevermore-candle font-semibold mb-1">
           <Sparkles className="w-4 h-4" />
           <span>Investigation: The Belltower Lightning Strike</span>
@@ -183,7 +183,7 @@ export default function CrosswordGame({
       {/* Main Grid + Clues Container */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Playable 8x8 2D Crossword Grid */}
-        <div className="lg:col-span-7 parchment-card p-4 sm:p-6 rounded-2xl border border-nevermore-border shadow-candle flex flex-col items-center">
+        <div className="lg:col-span-7 parchment-card p-4 sm:p-6 rounded-2xl border border-nevermore-border shadow-candle flex flex-col items-center animate-fadeInUp">
           <div className="flex items-center justify-between w-full mb-3 text-xs">
             <span className="font-gothic text-nevermore-candle font-bold tracking-wider">
               Lore Crossword Grid
@@ -271,10 +271,10 @@ export default function CrosswordGame({
             <button
               type="button"
               onClick={extractFromGoldCells}
-              className="text-[11px] px-2 py-1 rounded bg-amber-950/60 text-amber-300 hover:bg-amber-900 border border-amber-500/40 font-semibold transition flex items-center gap-1"
+              className="text-[11px] px-2.5 py-1 rounded-lg bg-amber-950/60 text-amber-300 hover:bg-amber-900 border border-amber-500/40 font-semibold transition flex items-center gap-1 active:scale-95"
             >
               <Zap className="w-3 h-3" />
-              <span>Use Golden Cells (03:15 AM)</span>
+              <span>Extract from Golden Cells</span>
             </button>
           </div>
         </div>
