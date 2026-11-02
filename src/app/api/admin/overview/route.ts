@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFullLeaderboardData, verifyAdminSession } from '@/lib/serverUtils';
-import db from '@/lib/db';
+import { query } from '@/lib/db';
 import { PUZZLES } from '@/lib/puzzleData';
 
 export async function GET(req: NextRequest) {
@@ -13,10 +13,10 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const data = getFullLeaderboardData();
+    const data = await getFullLeaderboardData();
 
     // Fetch audit logs
-    const auditLogs = db.prepare('SELECT * FROM audit_logs ORDER BY created_at DESC LIMIT 100').all();
+    const auditLogs = await query('SELECT * FROM audit_logs ORDER BY created_at DESC LIMIT 100');
 
     // Fetch answer key summary (Admin view only)
     const answerKeys = Object.values(PUZZLES).map((p) => ({
@@ -38,4 +38,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }
-

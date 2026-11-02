@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentTeamSession } from '@/lib/serverUtils';
-import db from '@/lib/db';
-import { Round, Submission, IntegrityFlag } from '@/lib/types';
+import { query, queryOne } from '@/lib/db';
+import { Round, Submission } from '@/lib/types';
 import { PUZZLES } from '@/lib/puzzleData';
 
 export async function GET(req: NextRequest) {
@@ -13,21 +13,25 @@ export async function GET(req: NextRequest) {
 
     const { team, session } = auth;
 
-    // Get all rounds
-    const rounds = db.prepare('SELECT * FROM rounds ORDER BY number ASC').all() as Round[];
+    // Fetch initial state in parallel
+    const [rounds, rawSubmissions, flagRow, settingsRows] = await Promise.all([
+      query<Round>('SELECT * FROM rounds ORDER BY number ASC'),
+      query<Submission>(
+        'SELECT round_id, answer, submitted_at, hints_used, is_correct, points, speed_bonus FROM submissions WHERE team_id = ?',
+        [team.id]
+      ),
+      queryOne<{ count: number | string }>('SELECT count(*) as count FROM integrity_flags WHERE team_id = ?', [team.id]),
+      query<{ key: string; value: string }>('SELECT key, value FROM settings'),
+    ]);
 
-    // Get current team submissions
-    const submissions = db
-      .prepare('SELECT round_id, answer, submitted_at, hints_used, is_correct, points, speed_bonus FROM submissions WHERE team_id = ?')
-      .all(team.id) as Submission[];
+    const submissions = rawSubmissions.map((s) => ({
+      ...s,
+      points: Number(s.points) || 0,
+      speed_bonus: Number(s.speed_bonus) || 0,
+      hints_used: Number(s.hints_used) || 0,
+      is_correct: Number(s.is_correct) || 0,
+    }));
 
-    // Get flag count
-    const flagRow = db
-      .prepare('SELECT count(*) as count FROM integrity_flags WHERE team_id = ?')
-      .get(team.id) as { count: number };
-
-    // Get settings
-    const settingsRows = db.prepare('SELECT key, value FROM settings').all() as { key: string; value: string }[];
     const settings = Object.fromEntries(settingsRows.map((s) => [s.key, s.value]));
 
     // Find currently active round (released and not locked)
@@ -50,9 +54,10 @@ export async function GET(req: NextRequest) {
       : null;
 
     // Get autosaved state for active round
-    const savedStateRow = db
-      .prepare('SELECT state_json, updated_at FROM game_states WHERE team_id = ? AND round_id = ?')
-      .get(team.id, activeRound.id) as { state_json: string; updated_at: string } | undefined;
+    const savedStateRow = await queryOne<{ state_json: string; updated_at: string }>(
+      'SELECT state_json, updated_at FROM game_states WHERE team_id = ? AND round_id = ?',
+      [team.id, activeRound.id]
+    );
 
     return NextResponse.json({
       authenticated: true,
@@ -62,7 +67,7 @@ export async function GET(req: NextRequest) {
       activeRound,
       clientPuzzle,
       submissions,
-      flagCount: flagRow.count,
+      flagCount: Number(flagRow?.count) || 0,
       scoreboardVisible: settings['scoreboard_visible'] === '1',
       savedState: savedStateRow ? JSON.parse(savedStateRow.state_json) : null,
     });
@@ -71,4 +76,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }
-

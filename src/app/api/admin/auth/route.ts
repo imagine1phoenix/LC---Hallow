@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import db from '@/lib/db';
+import { queryOne } from '@/lib/db';
 import { Admin } from '@/lib/types';
 
 const ADMIN_COOKIE_NAME = 'nevermore_admin_auth';
@@ -50,9 +50,7 @@ export async function POST(req: NextRequest) {
       };
     } else {
       // 2. Query admins table in database
-      const row = db
-        .prepare('SELECT id, name, role FROM admins WHERE passcode = ?')
-        .get(cleanPass) as Admin | undefined;
+      const row = await queryOne<Admin>('SELECT id, name, role FROM admins WHERE passcode = ?', [cleanPass]);
 
       if (row) {
         matchedAdmin = {
@@ -108,4 +106,3 @@ export async function DELETE() {
   response.cookies.delete(ADMIN_COOKIE_NAME);
   return response;
 }
-

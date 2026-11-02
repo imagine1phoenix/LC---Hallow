@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import db from './db';
+import { query, queryOne, execute } from './db';
 import { Team, DeviceSession, Round, IntegrityFlag, ScoreAdjustment, Submission, FinalAnswer } from './types';
 import { computeLeaderboard } from './scoring';
 
@@ -10,28 +10,60 @@ export async function getCurrentTeamSession(): Promise<{ team: Team; session: De
 
   if (!sessionId || !teamId) return null;
 
-  const session = db
-    .prepare('SELECT * FROM sessions WHERE id = ? AND team_id = ? AND revoked_at IS NULL')
-    .get(sessionId, teamId) as DeviceSession | undefined;
+  const session = await queryOne<DeviceSession>(
+    'SELECT * FROM sessions WHERE id = ? AND team_id = ? AND revoked_at IS NULL',
+    [sessionId, teamId]
+  );
 
   if (!session) return null;
 
-  const team = db.prepare('SELECT * FROM teams WHERE id = ?').get(teamId) as Team | undefined;
+  const team = await queryOne<Team>('SELECT * FROM teams WHERE id = ?', [teamId]);
   if (!team) return null;
 
   return { team, session };
 }
 
-export function getFullLeaderboardData() {
-  const teams = db.prepare('SELECT * FROM teams ORDER BY name ASC').all() as Team[];
-  const rounds = db.prepare('SELECT * FROM rounds ORDER BY number ASC').all() as Round[];
-  const submissions = db.prepare('SELECT * FROM submissions').all() as Submission[];
-  const adjustments = db.prepare('SELECT * FROM score_adjustments ORDER BY created_at DESC').all() as ScoreAdjustment[];
-  const finalAnswers = db.prepare('SELECT * FROM final_answers').all() as FinalAnswer[];
-  const flags = db.prepare('SELECT * FROM integrity_flags ORDER BY occurred_at DESC').all() as IntegrityFlag[];
-  const activeSessions = db.prepare('SELECT * FROM sessions WHERE revoked_at IS NULL').all() as DeviceSession[];
+export async function getFullLeaderboardData() {
+  const [
+    teams,
+    rounds,
+    rawSubmissions,
+    rawAdjustments,
+    rawFinalAnswers,
+    flags,
+    activeSessions,
+    settingsRows,
+  ] = await Promise.all([
+    query<Team>('SELECT * FROM teams ORDER BY name ASC'),
+    query<Round>('SELECT * FROM rounds ORDER BY number ASC'),
+    query<Submission>('SELECT * FROM submissions'),
+    query<ScoreAdjustment>('SELECT * FROM score_adjustments ORDER BY created_at DESC'),
+    query<FinalAnswer>('SELECT * FROM final_answers'),
+    query<IntegrityFlag>('SELECT * FROM integrity_flags ORDER BY occurred_at DESC'),
+    query<DeviceSession>('SELECT * FROM sessions WHERE revoked_at IS NULL'),
+    query<{ key: string; value: string }>('SELECT key, value FROM settings'),
+  ]);
 
-  const settingsRows = db.prepare('SELECT key, value FROM settings').all() as { key: string; value: string }[];
+  // Normalize numeric fields safely for calculation
+  const submissions: Submission[] = rawSubmissions.map((s) => ({
+    ...s,
+    points: Number(s.points) || 0,
+    speed_bonus: Number(s.speed_bonus) || 0,
+    hints_used: Number(s.hints_used) || 0,
+    is_correct: Number(s.is_correct) || 0,
+    is_motive_correct: Number(s.is_motive_correct) || 0,
+  }));
+
+  const adjustments: ScoreAdjustment[] = rawAdjustments.map((a) => ({
+    ...a,
+    delta: Number(a.delta) || 0,
+  }));
+
+  const finalAnswers: FinalAnswer[] = rawFinalAnswers.map((f) => ({
+    ...f,
+    judge_score: f.judge_score !== null && f.judge_score !== undefined ? Number(f.judge_score) : null,
+  }));
+
   const settings = Object.fromEntries(settingsRows.map((s) => [s.key, s.value]));
 
   const leaderboard = computeLeaderboard(
@@ -73,13 +105,12 @@ export async function verifyAdminSession(): Promise<{ valid: boolean; admin: { i
   }
 }
 
-export function logAdminAction(actor: string, action: string, details: string) {
+export async function logAdminAction(actor: string, action: string, details: string) {
   const id = 'audit-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
-  db.prepare('INSERT INTO audit_logs (id, actor, action, details) VALUES (?, ?, ?, ?)').run(
+  await execute('INSERT INTO audit_logs (id, actor, action, details) VALUES (?, ?, ?, ?)', [
     id,
     actor,
     action,
-    details
-  );
+    details,
+  ]);
 }
-

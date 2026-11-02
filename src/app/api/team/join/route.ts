@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { queryOne, execute } from '@/lib/db';
 import { Team, DeviceSession } from '@/lib/types';
 
 export async function POST(req: NextRequest) {
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const cleanCode = joinCode.trim().toUpperCase();
 
     // 1. Find team by join code
-    const team = db.prepare('SELECT * FROM teams WHERE UPPER(join_code) = ?').get(cleanCode) as Team | undefined;
+    const team = await queryOne<Team>('SELECT * FROM teams WHERE UPPER(join_code) = ?', [cleanCode]);
 
     if (!team) {
       return NextResponse.json(
@@ -26,18 +26,20 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Check existing active sessions for this team
-    const activeSession = db
-      .prepare('SELECT * FROM sessions WHERE team_id = ? AND revoked_at IS NULL')
-      .get(team.id) as DeviceSession | undefined;
+    const activeSession = await queryOne<DeviceSession>(
+      'SELECT * FROM sessions WHERE team_id = ? AND revoked_at IS NULL',
+      [team.id]
+    );
 
     if (activeSession) {
       // If bound to a different device, reject immediately!
       if (activeSession.device_fingerprint !== deviceFingerprint) {
         // Log an integrity conflict flag
         const flagId = 'flag-' + Date.now();
-        db.prepare(
-          'INSERT INTO integrity_flags (id, team_id, event_type, occurred_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)'
-        ).run(flagId, team.id, 'device_conflict');
+        await execute(
+          'INSERT INTO integrity_flags (id, team_id, event_type, occurred_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)',
+          [flagId, team.id, 'device_conflict']
+        );
 
         return NextResponse.json(
           {
@@ -52,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     // 3. Update team details if provided and first onboarding
     if (name && sigil) {
-      db.prepare('UPDATE teams SET name = ?, sigil = ? WHERE id = ?').run(name.trim(), sigil, team.id);
+      await execute('UPDATE teams SET name = ?, sigil = ? WHERE id = ?', [name.trim(), sigil, team.id]);
       team.name = name.trim();
       team.sigil = sigil;
     }
@@ -61,9 +63,10 @@ export async function POST(req: NextRequest) {
     let sessionId = activeSession?.id;
     if (!sessionId) {
       sessionId = 'sess-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
-      db.prepare(
-        'INSERT INTO sessions (id, team_id, device_fingerprint, bound_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)'
-      ).run(sessionId, team.id, deviceFingerprint);
+      await execute(
+        'INSERT INTO sessions (id, team_id, device_fingerprint, bound_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)',
+        [sessionId, team.id, deviceFingerprint]
+      );
     }
 
     const response = NextResponse.json({
@@ -100,4 +103,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'SERVER_ERROR', message: 'Failed to join team.' }, { status: 500 });
   }
 }
-

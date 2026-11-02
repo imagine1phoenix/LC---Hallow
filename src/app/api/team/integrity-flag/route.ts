@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentTeamSession } from '@/lib/serverUtils';
-import db from '@/lib/db';
+import { execute, queryOne } from '@/lib/db';
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,23 +19,23 @@ export async function POST(req: NextRequest) {
     }
 
     const id = 'flag-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
-    db.prepare('INSERT INTO integrity_flags (id, team_id, event_type, occurred_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)').run(
+    await execute('INSERT INTO integrity_flags (id, team_id, event_type, occurred_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)', [
       id,
       team.id,
-      eventType
-    );
+      eventType,
+    ]);
 
-    const countRow = db
-      .prepare('SELECT count(*) as count FROM integrity_flags WHERE team_id = ?')
-      .get(team.id) as { count: number };
+    const countRow = await queryOne<{ count: number | string }>(
+      'SELECT count(*) as count FROM integrity_flags WHERE team_id = ?',
+      [team.id]
+    );
 
     return NextResponse.json({
       success: true,
-      currentFlagCount: countRow.count,
+      currentFlagCount: Number(countRow?.count) || 0,
     });
   } catch (err: unknown) {
     console.error('Error logging integrity flag:', err);
     return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }
-

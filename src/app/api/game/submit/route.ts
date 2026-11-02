@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentTeamSession } from '@/lib/serverUtils';
-import db from '@/lib/db';
+import { queryOne, execute } from '@/lib/db';
 import { Round, Submission } from '@/lib/types';
 import { PUZZLES } from '@/lib/puzzleData';
 import { calculateRoundPoints, calculateSpeedBonus } from '@/lib/scoring';
@@ -20,23 +20,30 @@ export async function POST(req: NextRequest) {
     }
 
     // 1. Fetch round details
-    const round = db.prepare('SELECT * FROM rounds WHERE id = ?').get(roundId) as Round | undefined;
+    const round = await queryOne<Round>('SELECT * FROM rounds WHERE id = ?', [roundId]);
     if (!round) {
       return NextResponse.json({ error: 'ROUND_NOT_FOUND' }, { status: 404 });
     }
 
     // 2. Validate round is active
     if (!round.released_at) {
-      return NextResponse.json({ error: 'ROUND_NOT_RELEASED', message: 'This round has not been released by the Headmaster yet.' }, { status: 403 });
+      return NextResponse.json(
+        { error: 'ROUND_NOT_RELEASED', message: 'This round has not been released by the Headmaster yet.' },
+        { status: 403 }
+      );
     }
     if (round.locked_at) {
-      return NextResponse.json({ error: 'ROUND_LOCKED', message: 'Submissions for this round have been locked.' }, { status: 403 });
+      return NextResponse.json(
+        { error: 'ROUND_LOCKED', message: 'Submissions for this round have been locked.' },
+        { status: 403 }
+      );
     }
 
     // 3. Enforce single submission per round rule
-    const existingSubmission = db
-      .prepare('SELECT id FROM submissions WHERE team_id = ? AND round_id = ?')
-      .get(team.id, round.id) as Submission | undefined;
+    const existingSubmission = await queryOne<Submission>(
+      'SELECT id FROM submissions WHERE team_id = ? AND round_id = ?',
+      [team.id, round.id]
+    );
 
     if (existingSubmission) {
       return NextResponse.json(
@@ -66,12 +73,12 @@ export async function POST(req: NextRequest) {
 
     // 7. Insert submission atomically
     const subId = 'sub-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
-    db.prepare(`
+    await execute(`
       INSERT INTO submissions (
         id, team_id, round_id, answer, motive, submitted_at,
         hints_used, is_correct, is_motive_correct, points, speed_bonus
       ) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)
-    `).run(
+    `, [
       subId,
       team.id,
       round.id,
@@ -81,8 +88,8 @@ export async function POST(req: NextRequest) {
       isCorrect ? 1 : 0,
       isMotiveCorrect ? 1 : 0,
       points,
-      speedBonus
-    );
+      speedBonus,
+    ]);
 
     return NextResponse.json({
       success: true,
@@ -101,4 +108,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }
-

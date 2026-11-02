@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { execute } from '@/lib/db';
 import { logAdminAction, verifyAdminSession } from '@/lib/serverUtils';
 
 export async function POST(req: NextRequest) {
@@ -24,13 +24,13 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ error: 'A valid reason is required to unbind device.' }, { status: 400 });
         }
 
-        db.prepare(`
+        await execute(`
           UPDATE sessions
           SET revoked_at = CURRENT_TIMESTAMP, revoked_by = ?, reason = ?
           WHERE team_id = ? AND revoked_at IS NULL
-        `).run(actor, reason.trim(), teamId);
+        `, [actor, reason.trim(), teamId]);
 
-        logAdminAction(actor, 'UNBIND_DEVICE', `Unbound active session for team ${teamId}. Reason: ${reason.trim()}`);
+        await logAdminAction(actor, 'UNBIND_DEVICE', `Unbound active session for team ${teamId}. Reason: ${reason.trim()}`);
         return NextResponse.json({ success: true, message: 'Device unlocked. Team can now bind a new device.' });
       }
 
@@ -39,13 +39,13 @@ export async function POST(req: NextRequest) {
         const { roundId } = body;
         if (!roundId) return NextResponse.json({ error: 'roundId required' }, { status: 400 });
 
-        db.prepare(`
+        await execute(`
           UPDATE rounds
           SET released_at = CURRENT_TIMESTAMP, locked_at = NULL
           WHERE id = ?
-        `).run(roundId);
+        `, [roundId]);
 
-        logAdminAction(actor, 'RELEASE_ROUND', `Released round ${roundId} to all teams.`);
+        await logAdminAction(actor, 'RELEASE_ROUND', `Released round ${roundId} to all teams.`);
         return NextResponse.json({ success: true, message: `Round ${roundId} released.` });
       }
 
@@ -54,13 +54,13 @@ export async function POST(req: NextRequest) {
         const { roundId } = body;
         if (!roundId) return NextResponse.json({ error: 'roundId required' }, { status: 400 });
 
-        db.prepare(`
+        await execute(`
           UPDATE rounds
           SET locked_at = CURRENT_TIMESTAMP
           WHERE id = ?
-        `).run(roundId);
+        `, [roundId]);
 
-        logAdminAction(actor, 'LOCK_ROUND', `Locked submissions for round ${roundId}.`);
+        await logAdminAction(actor, 'LOCK_ROUND', `Locked submissions for round ${roundId}.`);
         return NextResponse.json({ success: true, message: `Round ${roundId} locked.` });
       }
 
@@ -72,12 +72,12 @@ export async function POST(req: NextRequest) {
         }
 
         const adjId = 'adj-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
-        db.prepare(`
+        await execute(`
           INSERT INTO score_adjustments (id, team_id, round_id, delta, reason, admin_id)
           VALUES (?, ?, ?, ?, ?, ?)
-        `).run(adjId, teamId, roundId || null, Number(delta), reason.trim(), actor);
+        `, [adjId, teamId, roundId || null, Number(delta), reason.trim(), actor]);
 
-        logAdminAction(
+        await logAdminAction(
           actor,
           'ADJUST_SCORE',
           `Adjusted team ${teamId} score by ${delta > 0 ? '+' : ''}${delta} pts. Reason: ${reason.trim()}`
@@ -90,9 +90,12 @@ export async function POST(req: NextRequest) {
       case 'TOGGLE_SCOREBOARD': {
         const { visible } = body;
         const val = visible ? '1' : '0';
-        db.prepare("INSERT INTO settings (key, value) VALUES ('scoreboard_visible', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value").run(val);
+        await execute(
+          "INSERT INTO settings (key, value) VALUES ('scoreboard_visible', ?) ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value",
+          [val]
+        );
 
-        logAdminAction(actor, 'TOGGLE_SCOREBOARD', `Scoreboard visibility set to ${visible ? 'PUBLIC' : 'HIDDEN'}`);
+        await logAdminAction(actor, 'TOGGLE_SCOREBOARD', `Scoreboard visibility set to ${visible ? 'PUBLIC' : 'HIDDEN'}`);
         return NextResponse.json({ success: true, scoreboardVisible: visible });
       }
 
@@ -104,14 +107,14 @@ export async function POST(req: NextRequest) {
         const id = 'team-' + Date.now().toString(36);
         const joinCode = 'NM-' + Math.floor(100 + Math.random() * 900);
 
-        db.prepare('INSERT INTO teams (id, name, sigil, join_code) VALUES (?, ?, ?, ?)').run(
+        await execute('INSERT INTO teams (id, name, sigil, join_code) VALUES (?, ?, ?, ?)', [
           id,
           name.trim(),
           sigil,
-          joinCode
-        );
+          joinCode,
+        ]);
 
-        logAdminAction(actor, 'CREATE_TEAM', `Created team "${name.trim()}" with code ${joinCode}`);
+        await logAdminAction(actor, 'CREATE_TEAM', `Created team "${name.trim()}" with code ${joinCode}`);
         return NextResponse.json({ success: true, team: { id, name: name.trim(), sigil, joinCode } });
       }
 
@@ -119,9 +122,9 @@ export async function POST(req: NextRequest) {
       case 'REGENERATE_CODE': {
         const { teamId } = body;
         const newCode = 'NM-' + Math.floor(100 + Math.random() * 900);
-        db.prepare('UPDATE teams SET join_code = ? WHERE id = ?').run(newCode, teamId);
+        await execute('UPDATE teams SET join_code = ? WHERE id = ?', [newCode, teamId]);
 
-        logAdminAction(actor, 'REGENERATE_CODE', `Regenerated join code for team ${teamId}: ${newCode}`);
+        await logAdminAction(actor, 'REGENERATE_CODE', `Regenerated join code for team ${teamId}: ${newCode}`);
         return NextResponse.json({ success: true, newCode });
       }
 
@@ -133,16 +136,16 @@ export async function POST(req: NextRequest) {
         const scoreNum = Math.min(30, Math.max(0, Number(score)));
         const id = 'final-' + teamId;
 
-        db.prepare(`
+        await execute(`
           INSERT INTO final_answers (id, team_id, text, judge_score, judged_at, judged_by)
           VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?)
           ON CONFLICT(team_id) DO UPDATE SET
-            judge_score = excluded.judge_score,
+            judge_score = EXCLUDED.judge_score,
             judged_at = CURRENT_TIMESTAMP,
-            judged_by = excluded.judged_by
-        `).run(id, teamId, notes, scoreNum, actor);
+            judged_by = EXCLUDED.judged_by
+        `, [id, teamId, notes, scoreNum, actor]);
 
-        logAdminAction(actor, 'JUDGE_FINAL_QUESTION', `Graded final question for team ${teamId}: ${scoreNum}/30 pts`);
+        await logAdminAction(actor, 'JUDGE_FINAL_QUESTION', `Graded final question for team ${teamId}: ${scoreNum}/30 pts`);
         return NextResponse.json({ success: true, score: scoreNum });
       }
 
@@ -154,4 +157,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }
-

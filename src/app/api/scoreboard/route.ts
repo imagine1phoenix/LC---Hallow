@@ -3,7 +3,7 @@ import { getFullLeaderboardData } from '@/lib/serverUtils';
 
 export async function GET(req: NextRequest) {
   try {
-    const { leaderboard, settings, rounds } = getFullLeaderboardData();
+    const { leaderboard, settings, rounds } = await getFullLeaderboardData();
     const isVisible = settings['scoreboard_visible'] === '1';
 
     // Check if query param includes admin bypass (if admin is viewing scoreboard)
@@ -39,4 +39,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }
-

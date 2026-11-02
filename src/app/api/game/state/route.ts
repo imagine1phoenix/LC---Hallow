@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentTeamSession } from '@/lib/serverUtils';
-import db from '@/lib/db';
+import { execute } from '@/lib/db';
 import { PUZZLES } from '@/lib/puzzleData';
 
 // Autosave game state
@@ -18,13 +18,13 @@ export async function POST(req: NextRequest) {
 
     const stateJson = JSON.stringify(state);
 
-    db.prepare(`
+    await execute(`
       INSERT INTO game_states (team_id, round_id, state_json, updated_at)
       VALUES (?, ?, ?, CURRENT_TIMESTAMP)
       ON CONFLICT(team_id, round_id) DO UPDATE SET
-        state_json = excluded.state_json,
+        state_json = EXCLUDED.state_json,
         updated_at = CURRENT_TIMESTAMP
-    `).run(auth.team.id, roundId, stateJson);
+    `, [auth.team.id, roundId, stateJson]);
 
     return NextResponse.json({ success: true, savedAt: new Date().toISOString() });
   } catch (err: unknown) {
@@ -67,4 +67,3 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: 'SERVER_ERROR' }, { status: 500 });
   }
 }
-
