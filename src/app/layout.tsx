@@ -9,6 +9,15 @@ import { Trophy, Shield } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Nevermore Murders · Official Event Platform',
   description: 'The Nevermore Academy Murder-Mystery Event Platform. Solve the mystery, seal your verdict, claim the cup.',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [
+      { url: '/apple-icon.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export default function RootLayout({
