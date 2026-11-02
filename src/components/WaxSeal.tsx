@@ -20,55 +20,62 @@ const SIGIL_THEMES: Record<
     ring: string;
     text: string;
     glow: string;
+    halo: string;
   }
 > = {
   raven: {
     gradient: 'from-purple-900 via-purple-950 to-black',
     border: 'border-purple-600/40 hover:border-purple-400',
     selectedBorder: 'border-purple-400',
-    ring: 'ring-purple-500/40',
-    text: 'text-purple-300',
-    glow: 'shadow-[0_0_20px_rgba(168,85,247,0.35)]',
+    ring: 'ring-purple-500/50',
+    text: 'text-purple-300 drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]',
+    glow: 'shadow-[0_0_25px_rgba(168,85,247,0.75),0_0_50px_rgba(168,85,247,0.35)]',
+    halo: 'bg-purple-600/30',
   },
   werewolf: {
     gradient: 'from-amber-800 via-orange-950 to-black',
     border: 'border-orange-600/40 hover:border-orange-400',
     selectedBorder: 'border-orange-400',
-    ring: 'ring-orange-500/40',
-    text: 'text-orange-300',
-    glow: 'shadow-[0_0_20px_rgba(249,115,22,0.35)]',
+    ring: 'ring-orange-500/50',
+    text: 'text-orange-300 drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]',
+    glow: 'shadow-[0_0_25px_rgba(249,115,22,0.75),0_0_50px_rgba(249,115,22,0.35)]',
+    halo: 'bg-orange-600/30',
   },
   siren: {
     gradient: 'from-cyan-900 via-teal-950 to-black',
     border: 'border-cyan-600/40 hover:border-cyan-400',
     selectedBorder: 'border-cyan-400',
-    ring: 'ring-cyan-500/40',
-    text: 'text-cyan-300',
-    glow: 'shadow-[0_0_20px_rgba(6,182,212,0.35)]',
+    ring: 'ring-cyan-500/50',
+    text: 'text-cyan-300 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]',
+    glow: 'shadow-[0_0_25px_rgba(6,182,212,0.75),0_0_50px_rgba(6,182,212,0.35)]',
+    halo: 'bg-cyan-600/30',
   },
   gorgon: {
     gradient: 'from-emerald-900 via-emerald-950 to-black',
     border: 'border-emerald-600/40 hover:border-emerald-400',
     selectedBorder: 'border-emerald-400',
-    ring: 'ring-emerald-500/40',
-    text: 'text-emerald-300',
-    glow: 'shadow-[0_0_20px_rgba(16,185,129,0.35)]',
+    ring: 'ring-emerald-500/50',
+    text: 'text-emerald-300 drop-shadow-[0_0_8px_rgba(16,185,129,0.6)]',
+    glow: 'shadow-[0_0_25px_rgba(16,185,129,0.75),0_0_50px_rgba(16,185,129,0.35)]',
+    halo: 'bg-emerald-600/30',
   },
   hyde: {
     gradient: 'from-red-900 via-rose-950 to-black',
     border: 'border-red-600/40 hover:border-red-400',
     selectedBorder: 'border-red-400',
-    ring: 'ring-red-500/40',
-    text: 'text-red-300',
-    glow: 'shadow-[0_0_20px_rgba(239,68,68,0.35)]',
+    ring: 'ring-red-500/50',
+    text: 'text-red-300 drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]',
+    glow: 'shadow-[0_0_25px_rgba(239,68,68,0.75),0_0_50px_rgba(239,68,68,0.35)]',
+    halo: 'bg-red-600/30',
   },
   vampire: {
     gradient: 'from-rose-900 via-crimson-950 to-black',
     border: 'border-rose-600/40 hover:border-rose-400',
     selectedBorder: 'border-rose-400',
-    ring: 'ring-rose-500/40',
-    text: 'text-rose-300',
-    glow: 'shadow-[0_0_20px_rgba(225,29,72,0.35)]',
+    ring: 'ring-rose-500/50',
+    text: 'text-rose-300 drop-shadow-[0_0_8px_rgba(225,29,72,0.6)]',
+    glow: 'shadow-[0_0_25px_rgba(225,29,72,0.75),0_0_50px_rgba(225,29,72,0.35)]',
+    halo: 'bg-rose-600/30',
   },
 };
 
@@ -107,37 +114,50 @@ export default function WaxSeal({
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col items-center gap-1.5 transition-all duration-200 select-none ${
+      className={`flex flex-col items-center gap-2 transition-all duration-300 select-none ${
         onClick ? 'cursor-pointer group' : ''
       }`}
     >
-      <div
-        className={`relative ${dim} rounded-full flex items-center justify-center bg-gradient-to-br ${theme.gradient} border-2 transition-all duration-200 ${
-          selected
-            ? `${theme.selectedBorder} ring-4 ${theme.ring} ${theme.glow} scale-105`
-            : `${theme.border} group-hover:scale-105 group-hover:border-white/40`
-        }`}
-        style={{
-          boxShadow: selected
-            ? undefined
-            : 'inset 0 2px 4px rgba(255, 255, 255, 0.15), inset 0 -3px 6px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.7)',
-        }}
-      >
-        {/* Embossed inner circle */}
+      <div className="relative flex items-center justify-center">
+        {/* Animated Glow Aura when selected */}
+        {selected && (
+          <div
+            className={`absolute -inset-2 rounded-full ${theme.halo} blur-md animate-pulse pointer-events-none`}
+          />
+        )}
+
         <div
-          className={`absolute inset-1 rounded-full border border-black/50 bg-black/20 flex items-center justify-center transition-colors ${
-            selected ? 'text-amber-200' : 'text-amber-100/80 group-hover:text-white'
+          className={`relative ${dim} rounded-full flex items-center justify-center bg-gradient-to-br ${
+            theme.gradient
+          } border-2 transition-all duration-300 ${
+            selected
+              ? `${theme.selectedBorder} ring-4 ${theme.ring} ${theme.glow} scale-110`
+              : `${theme.border} group-hover:scale-105 group-hover:border-white/50`
           }`}
+          style={{
+            boxShadow: selected
+              ? undefined
+              : 'inset 0 2px 4px rgba(255, 255, 255, 0.15), inset 0 -3px 6px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.7)',
+          }}
         >
-          {getIcon()}
+          {/* Embossed inner circle */}
+          <div
+            className={`absolute inset-1 rounded-full border border-black/50 bg-black/20 flex items-center justify-center transition-colors ${
+              selected ? 'text-amber-200' : 'text-amber-100/80 group-hover:text-white'
+            }`}
+          >
+            {getIcon()}
+          </div>
         </div>
       </div>
 
       {showName && (
         <div className="text-center transition-colors">
           <p
-            className={`text-xs font-semibold leading-tight ${
-              selected ? theme.text : 'text-nevermore-parchment group-hover:text-amber-200'
+            className={`text-xs font-semibold leading-tight transition-all duration-200 ${
+              selected
+                ? `${theme.text} font-bold scale-105`
+                : 'text-nevermore-parchment group-hover:text-amber-200'
             }`}
           >
             {sigil.name}

@@ -5,6 +5,7 @@ export interface CreatureSigil {
   name: string;
   latinName: string;
   description: string;
+  powers?: string;
   color: string;
   badgeBg: string;
   iconName: string;
