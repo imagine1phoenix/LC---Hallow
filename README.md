@@ -148,10 +148,10 @@ The platform includes full support for **Neon Serverless Postgres** via `@neonda
 Credentials are configured in `.env.local`:
 ```env
 # Pooled connection via PgBouncer (for edge/serverless queries)
-DATABASE_URL="postgresql://neondb_owner:npg_PDFlMY3msfe7@ep-morning-salad-aktmxu6r-pooler.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require"
+DATABASE_URL="postgresql://neondb_owner:[YOUR-PASSWORD]@ep-morning-salad-aktmxu6r-pooler.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require"
 
 # Direct connection (for DDL migrations)
-DIRECT_URL="postgresql://neondb_owner:npg_PDFlMY3msfe7@ep-morning-salad-aktmxu6r.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require"
+DIRECT_URL="postgresql://neondb_owner:[YOUR-PASSWORD]@ep-morning-salad-aktmxu6r.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require"
 
 NEON_PROJECT_ID="icy-glade-70012067"
 NEON_ORG_ID="org-aged-king-36912517"

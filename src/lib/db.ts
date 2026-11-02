@@ -1,10 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 
-// 1. Connection string: Environment variable first, with Neon fallback for Vercel
-const connectionString =
-  process.env.DATABASE_URL ||
-  process.env.DIRECT_URL ||
-  'postgresql://neondb_owner:npg_PDFlMY3msfe7@ep-morning-salad-aktmxu6r-pooler.c-3.us-west-2.aws.neon.tech/neondb?sslmode=require';
+// 1. Connection string: Loaded securely from environment variables
+const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL || '';
 
 // 2. Detect PostgreSQL / Neon
 const isPostgres = Boolean(
