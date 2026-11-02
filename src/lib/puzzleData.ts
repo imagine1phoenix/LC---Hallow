@@ -78,6 +78,15 @@ export const PUZZLES: Record<string, PuzzleDefinition> = {
       const clean = answer.trim().toUpperCase().replace(/\s+/g, '');
       const valid = ['03:15AM', '3:15AM', '03:15', '3:15', 'THREEFIFTEENAM', 'THREEFIFTEEN'];
       const isCorrect = valid.includes(clean);
+
+      // Honeypot check
+      if (clean.includes('11:45') || clean.includes('1145') || clean.includes('MIDNIGHT')) {
+        return {
+          isCorrect: false,
+          feedback: 'The hands of the tower clock stand rigid at another hour. You were misled by decoy shadows.',
+        };
+      }
+
       return {
         isCorrect,
         feedback: isCorrect
@@ -125,6 +134,15 @@ export const PUZZLES: Record<string, PuzzleDefinition> = {
       const clean = answer.trim().toUpperCase().replace(/[^A-Z]/g, '');
       const valid = ['CRACKSTONECRYPT', 'CRACKSTONESCRYPT', 'THECRACKSTONECRYPT', 'OLDCRACKSTONECRYPT'];
       const isCorrect = valid.includes(clean);
+
+      // Honeypot check
+      if (clean.includes('GREENHOUSE') || clean.includes('NIGHTSHADEGREENHOUSE')) {
+        return {
+          isCorrect: false,
+          feedback: 'The conservatory glass remains untouched. Forensic soot proves this location was a staged decoy.',
+        };
+      }
+
       return {
         isCorrect,
         feedback: isCorrect
@@ -181,6 +199,15 @@ export const PUZZLES: Record<string, PuzzleDefinition> = {
       const validNames = ['MARILYNTHORNHILL', 'THORNHILL', 'LAURELGATES', 'PROFESSORTHORNHILL', 'MARILYN'];
       const isCorrect = validNames.includes(cleanName);
 
+      // Honeypot check
+      if (cleanName.includes('KINBOTT') || cleanName.includes('VALERIE')) {
+        return {
+          isCorrect: false,
+          isMotiveCorrect: false,
+          feedback: 'Dr. Kinbott was verified at the town diner during the murder. This suspect was a planted decoy.',
+        };
+      }
+
       let isMotiveCorrect = false;
       if (motive) {
         const cleanMotive = motive.trim().toUpperCase().replace(/[^A-Z]/g, '');
@@ -224,6 +251,15 @@ export const PUZZLES: Record<string, PuzzleDefinition> = {
     },
     validateAnswer: (answer: string) => {
       const clean = answer.trim().toUpperCase().replace(/[^A-Z]/g, '');
+
+      // Honeypot check
+      if (clean.includes('CRACKSTONE')) {
+        return {
+          isCorrect: false,
+          feedback: 'Crackstone’s effigy weeps in darkness, but it does not answer the founder’s riddle.',
+        };
+      }
+
       const isCorrect = clean.includes('OPHELIA') || clean.includes('RAVEN') || clean.includes('EDGARALLANPOE');
       return {
         isCorrect,

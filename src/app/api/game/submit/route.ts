@@ -67,6 +67,16 @@ export async function POST(req: NextRequest) {
     const isCorrect = validationResult.isCorrect;
     const isMotiveCorrect = validationResult.isMotiveCorrect ?? false;
 
+    // Detect if team submitted a DevTools decoy honeypot answer
+    const DECOY_TERMS = ['11:45', 'GREENHOUSE', 'KINBOTT', 'CRACKSTONE EFFIGY'];
+    const usedDecoy = DECOY_TERMS.some((term) => answer.toUpperCase().includes(term));
+    if (usedDecoy) {
+      await execute(
+        'INSERT INTO integrity_flags (id, team_id, event_type, occurred_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)',
+        ['flag-honeypot-' + Date.now(), team.id, 'honeypot_bait_submitted']
+      );
+    }
+
     // 6. Compute points and speed bonus
     const points = calculateRoundPoints(round.number, isCorrect, hintsUsed, isMotiveCorrect);
     const speedBonus = calculateSpeedBonus(elapsedSeconds, isCorrect);

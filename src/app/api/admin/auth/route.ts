@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { queryOne } from '@/lib/db';
 import { Admin } from '@/lib/types';
+import { logAdminAction } from '@/lib/serverUtils';
 
 const ADMIN_COOKIE_NAME = 'nevermore_admin_auth';
 
@@ -37,6 +38,19 @@ export async function POST(req: NextRequest) {
     }
 
     const cleanPass = passcode.trim();
+
+    // 0. Intercept Decoy / Honeypot Passcodes
+    const DECOY_PASSCODES = ['corvus_noctis_666', 'addams_family_666', 'poe_shadow_1845'];
+    if (DECOY_PASSCODES.includes(cleanPass.toLowerCase())) {
+      await logAdminAction('INTRUDER_TRAP', 'HONEYPOT_BREACH', `Intruder attempted honeypot override: ${cleanPass}`);
+      return NextResponse.json(
+        {
+          error: 'HONEYPOT_BREACH',
+          message: 'Academy Counter-Ward Triggered. Honeypot decoy breach detected and logged to High Council.',
+        },
+        { status: 403 }
+      );
+    }
 
     // 1. Check custom master override from environment
     const masterPass = process.env.ADMIN_SECRET_PASSCODE || 'nevermore1891';

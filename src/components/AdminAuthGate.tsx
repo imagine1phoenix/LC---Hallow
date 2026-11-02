@@ -168,26 +168,14 @@ export default function AdminAuthGate({ children }: AdminAuthGateProps) {
             )}
           </button>
 
-          {/* Discreet clearance helper for development & volunteers */}
+          {/* Security Notice */}
           <div className="pt-2 border-t border-nevermore-border/40 text-[10px] text-nevermore-muted text-center space-y-1 font-mono">
-            <p>Seeded Roles & Default Clearance:</p>
-            <div className="flex flex-wrap justify-center gap-2 text-nevermore-candle/80">
-              <button
-                type="button"
-                onClick={() => setPasscode('nevermore1891')}
-                className="hover:underline"
-              >
-                Headmaster: nevermore1891
-              </button>
-              <span>·</span>
-              <button
-                type="button"
-                onClick={() => setPasscode('claws123')}
-                className="hover:underline"
-              >
-                Volunteer: claws123
-              </button>
-            </div>
+            <p className="text-nevermore-muted/70">
+              Nevermore Academy Security Vault · Authorized Personnel Only
+            </p>
+            <p className="text-[9px] text-amber-500/60">
+              Clearance codes are restricted. All login attempts are recorded in the immutable audit ledger.
+            </p>
           </div>
         </form>
       </div>

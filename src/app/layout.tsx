@@ -3,6 +3,7 @@ import './globals.css';
 import Link from 'next/link';
 import Crest from '@/components/Crest';
 import SoundToggle from '@/components/SoundToggle';
+import HoneypotTrap from '@/components/HoneypotTrap';
 
 export const metadata: Metadata = {
   title: 'Nevermore Murders · Official Event Platform',
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="min-h-screen flex flex-col justify-between selection:bg-rose-900 selection:text-white">
+        <HoneypotTrap />
         {/* Top Atmospheric Header */}
         <header className="border-b border-nevermore-border/70 bg-nevermore-bg/90 backdrop-blur-md sticky top-0 z-40 px-4 py-3">
           <div className="max-w-6xl mx-auto flex items-center justify-between">

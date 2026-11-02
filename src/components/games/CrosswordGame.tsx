@@ -34,41 +34,40 @@ export default function CrosswordGame({
   // 8x8 Crossword layout for Nevermore Lore
   // Active cells mapping
   const validCells: Record<string, CellDef> = {
-    // 1A: POE (r:0, c:0 -> c:2)
+    // 1A (r:0, c:0 -> c:2)
     '0,0': { r: 0, c: 0, number: 1, acrossId: '1a' },
     '0,1': { r: 0, c: 1, acrossId: '1a' },
     '0,2': { r: 0, c: 2, acrossId: '1a' },
 
-    // 2D: AJAX (Gorgon) (r:0, c:1 -> r:3, c:1)
+    // 2D (r:0, c:1 -> r:3, c:1)
     '1,1': { r: 1, c: 1, downId: '2d' },
     '2,1': { r: 2, c: 1, downId: '2d' },
     '3,1': { r: 3, c: 1, downId: '2d' },
 
-    // 3D: THREE (Hour of the bell) (r:0, c:5 -> r:4, c:5) - KEY CLUE 1 (GOLD)
+    // 3D (r:0, c:5 -> r:4, c:5) - KEY CLUE 1
     '0,5': { r: 0, c: 5, number: 3, downId: '3d', isKey: true },
     '1,5': { r: 1, c: 5, downId: '3d', isKey: true },
     '2,5': { r: 2, c: 5, downId: '3d', isKey: true },
     '3,5': { r: 3, c: 5, downId: '3d', isKey: true },
     '4,5': { r: 4, c: 5, downId: '3d', isKey: true },
 
-    // 4A: THING (Wednesday hand) (r:2, c:3 -> r:2, c:7)
+    // 4A (r:2, c:3 -> r:2, c:7)
     '2,3': { r: 2, c: 3, number: 4, acrossId: '4a' },
     '2,4': { r: 2, c: 4, acrossId: '4a' },
-    // '2,5' intersects 3D 'R' in THREE and 'I' in THING
     '2,6': { r: 2, c: 6, acrossId: '4a' },
     '2,7': { r: 2, c: 7, acrossId: '4a' },
 
-    // 5D: HYDE (r:2, c:7 -> r:5, c:7)
+    // 5D (r:2, c:7 -> r:5, c:7)
     '3,7': { r: 3, c: 7, downId: '5d' },
     '4,7': { r: 4, c: 7, downId: '5d' },
     '5,7': { r: 5, c: 7, downId: '5d' },
 
-    // 6A: ENID (Wolf roommate) (r:5, c:4 -> r:5, c:7)
+    // 6A (r:5, c:4 -> r:5, c:7)
     '5,4': { r: 5, c: 4, number: 6, acrossId: '6a' },
     '5,5': { r: 5, c: 5, acrossId: '6a' },
     '5,6': { r: 5, c: 6, acrossId: '6a' },
 
-    // 7A: FIFTEEN (Minute hand of belltower) (r:7, c:0 -> r:7, c:6) - KEY CLUE 2 (GOLD)
+    // 7A (r:7, c:0 -> r:7, c:6) - KEY CLUE 2
     '7,0': { r: 7, c: 0, number: 7, acrossId: '7a', isKey: true },
     '7,1': { r: 7, c: 1, acrossId: '7a', isKey: true },
     '7,2': { r: 7, c: 2, acrossId: '7a', isKey: true },
