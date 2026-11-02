@@ -56,6 +56,23 @@ export function getFullLeaderboardData() {
   };
 }
 
+export async function verifyAdminSession(): Promise<{ valid: boolean; admin: { id: string; name: string; role: string } | null }> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('nevermore_admin_auth')?.value;
+
+  if (!token) return { valid: false, admin: null };
+
+  try {
+    const data = JSON.parse(Buffer.from(token, 'base64').toString('utf8'));
+    if (data && data.name && data.role) {
+      return { valid: true, admin: data };
+    }
+    return { valid: false, admin: null };
+  } catch {
+    return { valid: false, admin: null };
+  }
+}
+
 export function logAdminAction(actor: string, action: string, details: string) {
   const id = 'audit-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
   db.prepare('INSERT INTO audit_logs (id, actor, action, details) VALUES (?, ?, ?, ?)').run(

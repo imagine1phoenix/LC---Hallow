@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getFullLeaderboardData } from '@/lib/serverUtils';
+import { getFullLeaderboardData, verifyAdminSession } from '@/lib/serverUtils';
 import db from '@/lib/db';
 import { PUZZLES } from '@/lib/puzzleData';
 
 export async function GET(req: NextRequest) {
   try {
+    const auth = await verifyAdminSession();
+    if (!auth.valid) {
+      return NextResponse.json(
+        { error: 'UNAUTHORIZED', message: 'Nevermore Headmaster clearance required.' },
+        { status: 401 }
+      );
+    }
+
     const data = getFullLeaderboardData();
 
     // Fetch audit logs

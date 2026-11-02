@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import WaxSeal from '@/components/WaxSeal';
 import Crest from '@/components/Crest';
+import AdminAuthGate from '@/components/AdminAuthGate';
 import { Trophy, Sparkles, Skull, Clock, MapPin, Award, ArrowRight } from 'lucide-react';
 
 export default function HostRevealPage() {
@@ -37,7 +38,8 @@ export default function HostRevealPage() {
   const winner = data?.leaderboard?.[0];
 
   return (
-    <div className="max-w-3xl mx-auto py-8 text-center space-y-8">
+    <AdminAuthGate>
+      <div className="max-w-3xl mx-auto py-8 text-center space-y-8">
       {/* Title */}
       <div className="space-y-2">
         <div className="flex justify-center">
@@ -179,6 +181,7 @@ export default function HostRevealPage() {
         )}
       </div>
     </div>
+    </AdminAuthGate>
   );
 }
 

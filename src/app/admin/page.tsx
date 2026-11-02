@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import WaxSeal from '@/components/WaxSeal';
+import AdminAuthGate from '@/components/AdminAuthGate';
 import {
   ShieldAlert,
   Play,
@@ -144,7 +145,8 @@ export default function AdminPage() {
   const isScoreboardVisible = data?.settings?.scoreboard_visible === '1';
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-16">
+    <AdminAuthGate>
+      <div className="space-y-6 max-w-5xl mx-auto pb-16">
       {/* Admin Command Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-nevermore-border/70">
         <div>
@@ -884,6 +886,7 @@ export default function AdminPage() {
         </div>
       )}
     </div>
+    </AdminAuthGate>
   );
 }
 

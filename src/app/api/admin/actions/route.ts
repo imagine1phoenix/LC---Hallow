@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
-import { logAdminAction } from '@/lib/serverUtils';
+import { logAdminAction, verifyAdminSession } from '@/lib/serverUtils';
 
 export async function POST(req: NextRequest) {
   try {
+    const auth = await verifyAdminSession();
+    if (!auth.valid || !auth.admin) {
+      return NextResponse.json(
+        { error: 'UNAUTHORIZED', message: 'Nevermore Headmaster clearance required.' },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
-    const { action, actor = 'Principal Weems' } = body;
+    const actor = auth.admin.name || 'Principal Larissa Weems';
+    const { action } = body;
 
     switch (action) {
       // 1. Device Unbind / Unlock (Mandatory reason + audit trail)
