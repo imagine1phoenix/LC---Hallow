@@ -6,7 +6,7 @@ import { SIGIL_LIST } from '@/lib/sigils';
 import { SigilId } from '@/lib/types';
 import WaxSeal from '@/components/WaxSeal';
 import Crest from '@/components/Crest';
-import { KeyRound, Users, ShieldAlert, Sparkles, ArrowRight } from 'lucide-react';
+import { KeyRound, Users, ShieldAlert, Sparkles, ArrowRight, Skull } from 'lucide-react';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -78,24 +78,31 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto space-y-8 py-4 sm:py-8">
-      {/* Intro Hero */}
-      <div className="text-center space-y-3">
-        <div className="flex justify-center mb-2">
-          <Crest size="lg" showSubtitle={false} />
+    <div className="max-w-2xl mx-auto space-y-10 py-4 sm:py-8">
+      {/* Hero Section */}
+      <div className="text-center space-y-4 animate-fadeInUp">
+        <div className="flex justify-center mb-4">
+          <div className="animate-float">
+            <Crest size="lg" showSubtitle={false} />
+          </div>
         </div>
-        <h1 className="font-gothic text-3xl sm:text-4xl font-extrabold text-nevermore-parchment tracking-wide">
+        <h1 className="font-gothic text-3xl sm:text-5xl font-extrabold text-nevermore-parchment tracking-wide leading-tight">
           The Nevermore Murders
         </h1>
+        <div className="gothic-divider max-w-xs mx-auto">
+          <span>⚜ Ink in Quills Presents ⚜</span>
+        </div>
         <p className="text-xs sm:text-sm text-nevermore-muted max-w-md mx-auto leading-relaxed">
-          Darkness falls across Ophelia Hall. Enter your secret academy code, bind your device, and claim your creature sigil.
+          Darkness falls across Ophelia Hall. A murder most foul has shaken the Academy.
+          Enter your secret code, bind your device, and pledge your creature allegiance.
         </p>
       </div>
 
       {/* Main Form Card */}
       <form
         onSubmit={handleJoin}
-        className="parchment-card p-6 sm:p-8 rounded-3xl border border-nevermore-border/80 shadow-candle space-y-6"
+        className="parchment-card p-6 sm:p-8 rounded-3xl border border-nevermore-border/80 shadow-candle space-y-7 animate-fadeInUp"
+        style={{ animationDelay: '150ms', animationFillMode: 'both' }}
       >
         {/* Error Callout */}
         {errorMsg && (
@@ -123,46 +130,8 @@ export default function OnboardingPage() {
             onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
             placeholder="e.g. RAVEN-772"
             required
-            className="w-full py-3.5 px-4 rounded-xl bg-black/60 border border-nevermore-border focus:border-nevermore-candle text-nevermore-parchment font-mono tracking-widest text-center text-lg uppercase outline-none focus:ring-2 focus:ring-nevermore-candle/30"
+            className="w-full py-3.5 px-4 rounded-xl bg-black/60 border border-nevermore-border focus:border-nevermore-candle text-nevermore-parchment font-mono tracking-widest text-center text-lg uppercase outline-none focus:ring-2 focus:ring-nevermore-candle/30 transition-all duration-300"
           />
-          <div className="flex flex-wrap gap-2 text-[10px] text-nevermore-muted font-mono pt-1">
-            <span>Sample codes:</span>
-            <button
-              type="button"
-              onClick={() => {
-                setJoinCode('RAVEN-772');
-                setTeamName('The Black Dahlias');
-                setSelectedSigil('raven');
-              }}
-              className="text-nevermore-candle hover:underline"
-            >
-              RAVEN-772
-            </button>
-            <span>·</span>
-            <button
-              type="button"
-              onClick={() => {
-                setJoinCode('WOLF-409');
-                setTeamName('Feral Claw Pack');
-                setSelectedSigil('werewolf');
-              }}
-              className="text-nevermore-candle hover:underline"
-            >
-              WOLF-409
-            </button>
-            <span>·</span>
-            <button
-              type="button"
-              onClick={() => {
-                setJoinCode('SIREN-813');
-                setTeamName('Ophelia Wave Sirens');
-                setSelectedSigil('siren');
-              }}
-              className="text-nevermore-candle hover:underline"
-            >
-              SIREN-813
-            </button>
-          </div>
         </div>
 
         {/* Team Name */}
@@ -176,7 +145,7 @@ export default function OnboardingPage() {
             value={teamName}
             onChange={(e) => setTeamName(e.target.value)}
             placeholder="e.g. The Nightshade Society"
-            className="w-full py-3 px-4 rounded-xl bg-black/50 border border-nevermore-border focus:border-nevermore-candle text-nevermore-parchment text-sm outline-none focus:ring-2 focus:ring-nevermore-candle/20"
+            className="w-full py-3 px-4 rounded-xl bg-black/50 border border-nevermore-border focus:border-nevermore-candle text-nevermore-parchment text-sm outline-none focus:ring-2 focus:ring-nevermore-candle/20 transition-all duration-300"
           />
         </div>
 
@@ -190,7 +159,7 @@ export default function OnboardingPage() {
             <span className="text-[10px] text-nevermore-muted font-mono">6 Outcast Orders</span>
           </label>
 
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 pt-1">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 pt-1 stagger-children">
             {SIGIL_LIST.map((sigil) => (
               <WaxSeal
                 key={sigil.id}
@@ -204,14 +173,22 @@ export default function OnboardingPage() {
           </div>
         </div>
 
+        {/* Gothic Divider */}
+        <div className="gothic-divider">
+          <Skull className="w-3 h-3" />
+        </div>
+
         {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-600 via-nevermore-candle to-amber-700 hover:from-amber-500 hover:to-amber-600 active:scale-[0.98] text-black font-gothic text-sm font-bold tracking-wider shadow-candle transition flex items-center justify-center gap-2"
+          className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-600 via-nevermore-candle to-amber-700 hover:from-amber-500 hover:to-amber-600 active:scale-[0.98] text-black font-gothic text-sm font-bold tracking-wider shadow-candle transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? (
-            <span>Binding Device to Academy Archives...</span>
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 rounded-full border-2 border-black/40 border-t-transparent animate-spin" />
+              <span>Binding Device to Academy Archives...</span>
+            </span>
           ) : (
             <>
               <span>Enter The Crypt & Begin</span>
@@ -227,4 +204,3 @@ export default function OnboardingPage() {
     </div>
   );
 }
-
