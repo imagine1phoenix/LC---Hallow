@@ -10,17 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         nevermore: {
-          darkest: "#07060a",
-          bg: "#0c0a14",
-          card: "#141121",
-          surface: "#1d1930",
-          border: "#2d2745",
-          highlight: "#443b66",
-          parchment: "#f4ede2",
-          bone: "#d1c7bd",
-          muted: "#8c85a3",
-          gold: "#d4af37",
-          candle: "#f59e0b",
+          darkest: "#09070D",     // Input background / deepest shade
+          bg: "#0B0810",          // Main background
+          card: "#151020",        // Card background
+          surface: "#1A1428",     // Elevated surface
+          border: "#33263E",      // Border color
+          highlight: "#4A385A",   // Hover border / highlight
+          parchment: "#F2EBDD",   // Main text
+          bone: "#DDD4C6",        // Neutral bone text
+          muted: "#A99BB8",       // Secondary text (high contrast)
+          gold: "#D6A63C",        // Primary gold
+          candle: "#D6A63C",      // Primary gold action accent
           crimson: "#881337",
           blood: "#b91c1c",
           seal: "#e11d48",
@@ -34,22 +34,32 @@ const config: Config = {
         mono: ["JetBrains Mono", "Courier New", "monospace"],
       },
       boxShadow: {
-        candle: "0 0 25px -5px rgba(245, 158, 11, 0.25)",
+        candle: "0 0 25px -5px rgba(214, 166, 60, 0.25)",
         crimson: "0 0 25px -5px rgba(225, 29, 72, 0.3)",
         parchment: "0 4px 20px -2px rgba(0, 0, 0, 0.7)",
       },
       animation: {
         flicker: "flicker 4s infinite alternate",
         pulseGlow: "pulseGlow 2.5s ease-in-out infinite",
-        fadeIn: "fadeIn 0.4s ease-out",
-        fadeInUp: "fadeInUp 0.5s ease-out",
-        fadeInScale: "fadeInScale 0.35s ease-out",
-        slideInRight: "slideInRight 0.4s ease-out",
+        fadeIn: "fadeIn 0.35s ease-out",
+        fadeInUp: "fadeInUp 0.4s ease-out",
+        fadeInScale: "fadeInScale 0.3s ease-out",
+        slideInRight: "slideInRight 0.35s ease-out",
         float: "floatSlow 4s ease-in-out infinite",
         borderPulse: "borderPulse 2s ease-in-out infinite",
         shimmer: "shimmer 3s infinite",
+        crestEntrance: "crestEntrance 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        titleEntrance: "titleEntrance 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.16s backwards",
       },
       keyframes: {
+        crestEntrance: {
+          "0%": { opacity: "0", transform: "scale(0.92)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        titleEntrance: {
+          "0%": { opacity: "0", transform: "translateY(4px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
         flicker: {
           "0%, 100%": { opacity: "1", filter: "brightness(1)" },
           "50%": { opacity: "0.85", filter: "brightness(0.92)" },
@@ -65,24 +75,24 @@ const config: Config = {
           to: { opacity: "1" },
         },
         fadeInUp: {
-          from: { opacity: "0", transform: "translateY(16px)" },
+          from: { opacity: "0", transform: "translateY(12px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
         fadeInScale: {
-          from: { opacity: "0", transform: "scale(0.92)" },
+          from: { opacity: "0", transform: "scale(0.94)" },
           to: { opacity: "1", transform: "scale(1)" },
         },
         slideInRight: {
-          from: { opacity: "0", transform: "translateX(24px)" },
+          from: { opacity: "0", transform: "translateX(20px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
         floatSlow: {
           "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-6px)" },
+          "50%": { transform: "translateY(-5px)" },
         },
         borderPulse: {
-          "0%, 100%": { borderColor: "rgba(245, 158, 11, 0.3)" },
-          "50%": { borderColor: "rgba(245, 158, 11, 0.7)" },
+          "0%, 100%": { borderColor: "rgba(214, 166, 60, 0.3)" },
+          "50%": { borderColor: "rgba(214, 166, 60, 0.7)" },
         },
         shimmer: {
           "0%": { backgroundPosition: "-200% center" },

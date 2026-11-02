@@ -99,11 +99,11 @@ export default function AdminAuthGate({ children }: AdminAuthGateProps) {
       <div className="max-w-md mx-auto py-12 px-4 space-y-8 animate-fadeInUp">
         <div className="text-center space-y-3">
           <div className="flex justify-center mb-2">
-            <div className="animate-float">
+            <div className="animate-crestEntrance">
               <Crest size="lg" showSubtitle={false} />
             </div>
           </div>
-          <h1 className="font-gothic text-2xl sm:text-3xl font-extrabold text-nevermore-parchment tracking-wide">
+          <h1 className="font-gothic text-2xl sm:text-3xl font-extrabold text-nevermore-parchment tracking-wide animate-titleEntrance">
             Headmaster Vault
           </h1>
           <p className="text-xs text-nevermore-muted font-mono uppercase tracking-widest text-rose-400">

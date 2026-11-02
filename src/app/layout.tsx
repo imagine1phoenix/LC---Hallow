@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Crest from '@/components/Crest';
 import SoundToggle from '@/components/SoundToggle';
 import HoneypotTrap from '@/components/HoneypotTrap';
+import EntranceLoader from '@/components/EntranceLoader';
 import { Trophy, Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="min-h-screen flex flex-col justify-between selection:bg-rose-900 selection:text-white">
+        <EntranceLoader />
         <HoneypotTrap />
         {/* Top Atmospheric Header */}
         <header className="border-b border-nevermore-border/70 bg-nevermore-bg/90 backdrop-blur-md sticky top-0 z-40">
@@ -36,22 +38,25 @@ export default function RootLayout({
               <Crest size="sm" showSubtitle={true} />
             </Link>
 
-            <nav className="flex items-center gap-2 sm:gap-3">
+            <nav className="flex items-center gap-3 sm:gap-4">
               <SoundToggle />
-              <Link
-                href="/scoreboard"
-                className="text-xs font-semibold px-3 py-2 rounded-xl bg-nevermore-surface hover:bg-nevermore-card border border-nevermore-border text-nevermore-parchment hover:text-nevermore-candle transition flex items-center gap-1.5 group"
-              >
-                <Trophy className="w-3.5 h-3.5 text-nevermore-gold group-hover:text-amber-300 transition" />
-                <span className="hidden sm:inline">Scoreboard</span>
-              </Link>
-              <Link
-                href="/admin"
-                className="text-xs font-mono px-3 py-2 rounded-xl bg-black/40 hover:bg-nevermore-surface border border-nevermore-border/50 text-nevermore-muted hover:text-nevermore-parchment transition flex items-center gap-1.5"
-              >
-                <Shield className="w-3.5 h-3.5 text-nevermore-muted" />
-                <span className="hidden sm:inline">Admin Desk</span>
-              </Link>
+              <div className="flex items-center gap-2 sm:gap-3 font-mono text-xs uppercase tracking-wider font-semibold">
+                <Link
+                  href="/scoreboard"
+                  className="text-nevermore-muted hover:text-nevermore-gold transition flex items-center gap-1.5"
+                >
+                  <Trophy className="w-3.5 h-3.5 text-nevermore-gold" />
+                  <span>Scoreboard</span>
+                </Link>
+                <span className="text-nevermore-border">·</span>
+                <Link
+                  href="/admin"
+                  className="text-nevermore-muted hover:text-nevermore-gold transition flex items-center gap-1.5"
+                >
+                  <Shield className="w-3.5 h-3.5 text-nevermore-muted" />
+                  <span>Admin</span>
+                </Link>
+              </div>
             </nav>
           </div>
           {/* Subtle gothic gradient line */}

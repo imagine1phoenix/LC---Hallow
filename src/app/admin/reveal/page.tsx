@@ -43,9 +43,11 @@ export default function HostRevealPage() {
       {/* Title */}
       <div className="space-y-2">
         <div className="flex justify-center">
-          <Crest size="lg" showSubtitle={false} />
+          <div className="animate-crestEntrance">
+            <Crest size="lg" showSubtitle={false} />
+          </div>
         </div>
-        <h1 className="font-gothic text-3xl sm:text-5xl font-extrabold text-nevermore-parchment">
+        <h1 className="font-gothic text-3xl sm:text-5xl font-extrabold text-nevermore-parchment animate-titleEntrance">
           The Grand Unmasking
         </h1>
         <p className="text-xs sm:text-sm text-nevermore-muted font-mono">

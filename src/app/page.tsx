@@ -52,7 +52,7 @@ export default function OnboardingPage() {
           router.push('/play');
         }
       })
-      .catch(() => { });
+      .catch(() => {});
   }, [router]);
 
   const handleJoin = async (e: React.FormEvent) => {
@@ -94,33 +94,41 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-4 sm:py-8 lg:py-12 animate-fadeIn">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+    <div className="max-w-5xl mx-auto py-4 sm:py-6 lg:py-8 animate-fadeIn">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Left Column: Event Presentation & Lore */}
-        <div className="lg:col-span-5 space-y-6 text-center lg:text-left animate-fadeInUp">
+        <div className="lg:col-span-5 space-y-4 text-center lg:text-left pt-1 lg:pt-2">
+          {/* Academy Crest: Fades in first */}
           <div className="flex justify-center lg:justify-start">
-            <div className="animate-float">
+            <div className="animate-crestEntrance">
               <Crest size="md" showSubtitle={false} />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <span className="text-xs sm:text-sm font-mono font-bold tracking-widest text-nevermore-candle uppercase block">
+          {/* Title: Fades in after crest */}
+          <div className="space-y-1.5 animate-titleEntrance">
+            <span className="text-xs sm:text-sm font-mono font-bold tracking-widest text-nevermore-gold uppercase block">
               Ink in Quills Presents
             </span>
-            <h1 className="font-gothic text-3xl sm:text-5xl font-black text-nevermore-parchment tracking-wide leading-tight">
+            <h1 className="font-gothic text-3xl sm:text-4xl lg:text-5xl font-black text-nevermore-parchment tracking-wide leading-tight">
               THE NEVERMORE MURDERS
             </h1>
           </div>
 
-          <p className="text-xs sm:text-sm text-nevermore-muted leading-relaxed max-w-md mx-auto lg:mx-0">
+          <p
+            className="text-sm text-nevermore-muted leading-relaxed max-w-md mx-auto lg:mx-0 animate-fadeIn"
+            style={{ animationDelay: '280ms', animationFillMode: 'backwards' }}
+          >
             Darkness has fallen across Ophelia Hall. A murder has shaken the Academy.
             Your investigation begins here.
           </p>
 
-          <div className="pt-1 flex justify-center lg:justify-start">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-950/40 border border-amber-500/40 text-amber-300 font-mono text-xs shadow-candle">
-              <Clock className="w-3.5 h-3.5 text-nevermore-candle animate-pulse" />
+          <div
+            className="pt-1 flex justify-center lg:justify-start animate-fadeIn"
+            style={{ animationDelay: '340ms', animationFillMode: 'backwards' }}
+          >
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#151020] border border-[#33263E] text-nevermore-gold font-mono text-xs shadow-candle">
+              <Clock className="w-3.5 h-3.5 text-nevermore-gold animate-pulse" />
               <span className="tracking-widest font-semibold uppercase text-[11px]">
                 The Game Is Afoot
               </span>
@@ -132,7 +140,7 @@ export default function OnboardingPage() {
         <div className="lg:col-span-7">
           <form
             onSubmit={handleJoin}
-            className="parchment-card p-6 sm:p-8 rounded-3xl border border-nevermore-border/80 shadow-candle space-y-5 animate-fadeInUp"
+            className="parchment-card p-6 sm:p-8 rounded-2xl border border-nevermore-border/80 shadow-candle space-y-5 animate-fadeInUp"
             style={{ animationDelay: '150ms', animationFillMode: 'both' }}
           >
             {/* Form Header */}
@@ -162,7 +170,7 @@ export default function OnboardingPage() {
             <div className="space-y-1.5">
               <label className="font-mono text-[11px] font-bold text-nevermore-parchment uppercase tracking-wider flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
-                  <KeyRound className="w-3.5 h-3.5 text-nevermore-candle" />
+                  <KeyRound className="w-3.5 h-3.5 text-nevermore-muted" />
                   <span>Academy Join Code</span>
                 </span>
                 <span className="text-[10px] text-nevermore-muted font-normal">
@@ -175,14 +183,14 @@ export default function OnboardingPage() {
                 onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                 placeholder="e.g. RAVEN-772"
                 required
-                className="w-full py-3.5 px-4 rounded-xl bg-black/60 border border-nevermore-border focus:border-nevermore-candle text-nevermore-parchment font-mono tracking-widest text-base sm:text-lg uppercase outline-none focus:ring-2 focus:ring-nevermore-candle/30 transition-all duration-300"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#09070D] border border-nevermore-border focus:border-nevermore-gold text-nevermore-parchment font-mono tracking-widest text-base sm:text-lg uppercase outline-none focus:ring-2 focus:ring-nevermore-gold/25 transition-all duration-200 placeholder:text-nevermore-muted/40"
               />
             </div>
 
             {/* Team Name */}
             <div className="space-y-1.5">
               <label className="font-mono text-[11px] font-bold text-nevermore-parchment uppercase tracking-wider flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-nevermore-candle" />
+                <Users className="w-3.5 h-3.5 text-nevermore-muted" />
                 <span>Team Name</span>
               </label>
               <input
@@ -190,7 +198,7 @@ export default function OnboardingPage() {
                 value={teamName}
                 onChange={(e) => setTeamName(e.target.value)}
                 placeholder="e.g. The Nightshade Society"
-                className="w-full py-3 px-4 rounded-xl bg-black/50 border border-nevermore-border focus:border-nevermore-candle text-nevermore-parchment text-sm outline-none focus:ring-2 focus:ring-nevermore-candle/20 transition-all duration-300"
+                className="w-full py-3 px-4 rounded-xl bg-[#09070D] border border-nevermore-border focus:border-nevermore-gold text-nevermore-parchment text-sm outline-none focus:ring-2 focus:ring-nevermore-gold/20 transition-all duration-200 placeholder:text-nevermore-muted/40"
               />
             </div>
 
@@ -198,7 +206,7 @@ export default function OnboardingPage() {
             <div className="space-y-2.5">
               <label className="font-mono text-[11px] font-bold text-nevermore-parchment uppercase tracking-wider flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-nevermore-candle" />
+                  <Sparkles className="w-3.5 h-3.5 text-nevermore-muted" />
                   <span>Choose Your Sigil</span>
                 </span>
                 <span className="text-[10px] text-nevermore-muted font-normal">
@@ -223,7 +231,7 @@ export default function OnboardingPage() {
               {activeSigil && (
                 <div
                   key={activeSigil.id}
-                  className={`p-3.5 rounded-2xl border transition-all duration-300 animate-fadeInUp ${activeSigil.badgeBg} flex items-start gap-3 shadow-candle mt-2`}
+                  className={`p-3.5 rounded-xl border transition-all duration-200 animate-fadeInUp ${activeSigil.badgeBg} flex items-start gap-3 shadow-candle mt-2`}
                 >
                   <div className="shrink-0 mt-0.5">
                     <WaxSeal sigilId={activeSigil.id} size="sm" />
@@ -236,8 +244,8 @@ export default function OnboardingPage() {
                       <span className="text-[10px] font-mono italic opacity-75">
                         ({activeSigil.latinName})
                       </span>
-                      <span className="text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-black/50 border border-white/10 text-amber-300 flex items-center gap-1 font-semibold">
-                        <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+                      <span className="text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded bg-black/50 border border-white/10 text-nevermore-gold flex items-center gap-1 font-semibold">
+                        <Sparkles className="w-2.5 h-2.5 text-nevermore-gold" />
                         <span>Powers</span>
                       </span>
                     </div>
@@ -253,7 +261,7 @@ export default function OnboardingPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-600 via-nevermore-candle to-amber-700 hover:from-amber-500 hover:to-amber-600 active:scale-[0.98] text-black font-gothic text-sm font-bold tracking-wider shadow-candle transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+              className="w-full py-3.5 px-6 rounded-xl bg-nevermore-gold hover:bg-[#c49530] active:scale-[0.98] text-[#0B0810] font-gothic text-sm font-bold tracking-wider shadow-candle transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
